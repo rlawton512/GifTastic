@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang = "en">
+
+<head>
+	<meta charset="utf-8">
+	<title>GIPHY Fruits and Veggies</title>
+	<style>
+
+
+	</style>
+</head>
+
+<body>
+	<div class = "container">
+	<h1>Fruits and Veggies are Good for You!</h1>
+
+	<div id = "fruit-veggie-Buttons">
+
+	</div>
+	<br>
+	<br>
+
+	<form id = "fruitveggie-form">
+		<label for = "fruitveggie-input"> Add fruit or vegetable</label>
+		<input type = "text" id = "fruitveggie-input"><br><br>
+
+		<input id = "addFruitVeggie" type = "submit" value = "Submit More">
+
+	</form>
+
+	<div id = "fruit-veggie-view"></div>
+	</div>
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+	//create an array of topics
+	var topics = ["Oranges","Kiwi", "Celery", "Spinach", "Broccoli"];
+
+	//create variable for giphy results 
+	var results; 
+
+	//function to display content 
+	function displayFruitVeggieInfo (){
+
+		var x = $(this).attr("data-name");
+		var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + x + "&api_key=2ef435009ff4453cb958817e7b26260b&limit=10&rating=g"
+
+		//creates AJAX call for the topics being clicked 
+		$.ajax({
+			url: queryURL,
+			method: "GET"
+
+		}).done(function(response){
+			console.log(queryURL);
+			console.log("success got data", response);
+
+			//captures and loops through response data 
+			results = response.data
+			for (var i = 0; i < results.length; i++){
+
+				//creates a div to hold the data 
+				var fruitVeggieDiv = $("<div></div>")
+
+				//retrieves ratings 
+				var rating = results[i].rating;
+
+				//retrieves images 
+				var fruitVeggieImage = $("<img>");
+
+				fruitVeggieImage.attr("src", results[i].images.fixed_height_still.url);
+    			fruitVeggieImage.attr("data-still", fruitVeggieImage.attr("src"));
+    			fruitVeggieImage.attr("data-animate", results[i].images.fixed_height.url);
+    			fruitVeggieImage.on("click", function(){
+
+    				if($(this).attr("src") === $(this).attr("data-still")){
+                        
+                        $(this).attr("src", $(this).attr("data-animate"));
+
+                    } //these attributes allow the user to pause the gif
+                    else {
+                        $(this).attr("src", $(this).attr("data-still"));
+                    }
+				})	
+			//adds rating and images to html 
+			fruitVeggieDiv.addClass("thumbnails");
+			fruitVeggieDiv.append("<p> Rating:  " + rating + "</p>");
+			fruitVeggieDiv.append(fruitVeggieImage);
+			//prepending the fruitVeggieDiv to div in html 	
+			$("#fruit-veggie-view").prepend(fruitVeggieDiv);
+			}
+		})
+
+	}
+
+	function showButtons() {
+
+        // Deletes the fruits & veggies prior to adding new fruit & veggies
+        // (this is necessary otherwise you will have repeat buttons)
+        $("#fruit-veggie-Buttons").empty();
+
+        // Loops through the array of fruit & veggies
+        for (var i = 0; i < topics.length; i++) {
+
+          // Generate buttons for each movie in the array
+          var a = $("<button>");
+          // Adds a class of fruit & veggie to our button
+          a.addClass("fruit-veggie");
+          // Added a data-attribute
+          a.attr("data-name", topics[i]);
+          // Provided the initial button text
+          a.text(topics[i]);
+          // Added the button to the fruit-veggie-button div
+          $("#fruit-veggie-Buttons").append(a);
+      	}
+  	}
+
+  		$("#addFruitVeggie").on("click", function(event) {
+        event.preventDefault();
+        // This line of code will grab the input from the textbox
+        var x = $("#fruitveggie-input").val().trim();
+
+        // The movie from the textbox is then added to our array
+        topics.push(x);
+
+        // Calling renderButtons which handles the processing of our movie array
+        showButtons();
+	});	
+
+  	 $(document).on("click", ".fruit-veggie", displayFruitVeggieInfo);	
+
+	 showButtons();	 
+
+</script>
+</body>
+
+
+
+</html>
