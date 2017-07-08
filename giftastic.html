@@ -56,8 +56,8 @@
 			method: "GET"
 
 		}).done(function(response){
-			console.log(queryURL);
-			console.log("success got data", response);
+			// console.log(queryURL);
+			// console.log("success got data", response);
 
 			//captures and loops through response data 
 			results = response.data
@@ -81,7 +81,7 @@
                         
                         $(this).attr("src", $(this).attr("data-animate"));
 
-                    } //these attributes allow the user to pause the gif
+                    } //these attributes will pause the gif
                     else {
                         $(this).attr("src", $(this).attr("data-still"));
                     }
