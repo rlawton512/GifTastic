@@ -124,8 +124,11 @@
         // This line of code will grab the input from the textbox
         var x = $("#fruitveggie-input").val().trim();
 
-        // The movie from the textbox is then added to our array
+        // The topics from the textbox is then added to our array
         topics.push(x);
+
+        // Clear the text box when done
+        $("#fruitveggie-input").val("");
 
         // Calling renderButtons which handles the processing of our movie array
         showButtons();
